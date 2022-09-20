@@ -1,0 +1,20 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Device is already configured"
+        },
+        "error": {
+            "cannot_connect": "Failed to connect",
+            "wrong_id": "Invalid Device ID. Check the bottom of the lamp for correct 8-character ID.",
+            "unknown": "Unexpected error"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "ip": "Light IP Address",
+                    "device_id": "Light Device ID (near QR code on the bottom)"
+                }
+            }
+        }
+    }
+}
