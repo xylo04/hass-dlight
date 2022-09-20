@@ -50,11 +50,10 @@ def brightness_to_hass(brightness):
 
 class Dlight(LightEntity):
     _attr_has_entity_name: bool = True
-    _attr_name = None
     _attr_icon: str = "mdi:lamp"
     # Light supports 2600 - 6000K
-    _attr_min_mireds: int = 1000000 / 6000
-    _attr_max_mireds: int = 1000000 / 2600
+    _attr_min_mireds: int = round(1000000 / 6000)
+    _attr_max_mireds: int = round(1000000 / 2600)
 
     ip: str
     device_id: str
@@ -67,6 +66,7 @@ class Dlight(LightEntity):
         self.ip = ip
         self.device_id = device_id
         self._attr_unique_id = device_id
+        self._attr_name = device_id
         self._attr_assumed_state = False
         self._attr_color_mode = COLOR_MODE_COLOR_TEMP
         self._attr_supported_color_modes = {ColorMode.COLOR_TEMP}
@@ -125,7 +125,7 @@ class Dlight(LightEntity):
 
         temperature = None
         if kwargs.get("color_temp") is not None:
-            temperature = round(kwargs.get("color_temp") * 1000000, -2)
+            temperature = round(1000000 / kwargs.get("color_temp"), -2)
 
         status = await turn_on(self.ip, self.device_id, brightness, temperature)
         if status.get("on") is not None:
