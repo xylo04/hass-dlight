@@ -3,10 +3,15 @@ import json
 import asyncio
 import time
 
+from typing import Optional
+
 from homeassistant.exceptions import HomeAssistantError
 _LOGGER = logging.getLogger(__name__)
 
 command_seq_number:int = 0
+
+def clamp(value, min_value, max_value):
+    return min(max_value, max(value, min_value))
 
 async def get_device_info(ip: str, deviceId: str) -> dict[str, str]:
     return await _send_command(ip, {"commandId":"checkStatus", "deviceId": deviceId, "commandType":"QUERY_DEVICE_INFO"})
@@ -20,18 +25,18 @@ Turns on the light or adjusts temperature and brightness.
 Brightness range is 0 - 100.
 Color temperature is in Kelvins, 2600-6000
 """
-async def turn_on(ip: str, deviceId: str, brightness:int|None = None, temperature:int|None = None) -> dict[str, str]:
+async def turn_on(ip: str, deviceId: str, brightness:Optional[int] = None, temperature:Optional[int] = None) -> dict[str, str]:
     return await _turn_on_off(ip, deviceId, True, brightness, temperature)
 
 async def turn_off(ip: str, deviceId: str) -> dict[str, str]:
     return await _turn_on_off(ip, deviceId, False)
 
-async def _turn_on_off(ip: str, deviceId: str, on: bool, brightness:int|None = None, temperature:int|None = None) -> dict[str, str]:
-    commands = { "commands": [{"ON": on}] }
+async def _turn_on_off(ip: str, deviceId: str, on: bool, brightness:Optional[int] = None, temperature:Optional[int] = None) -> dict[str, str]:
+    commands = [{"on": on}]
     if brightness is not None:
-        commands["commands"].append({"BRIGHTNESS": brightness})
+        commands.append({"brightness": clamp(brightness, 0, 100)})
     if temperature is not None:
-        commands["commands"].append({"COLOR": {"TEMPERATURE": temperature}})
+        commands.append({"color": {"temperature": clamp(temperature, 2600, 6000)}})
     return await _send_command(ip, {"deviceId": deviceId, "commandType":"EXECUTE", "commands": commands})
 
 async def _send_command(ip:str, data:dict[str, str]):
