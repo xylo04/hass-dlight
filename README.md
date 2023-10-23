@@ -1,5 +1,11 @@
 # dLight HASS Module
 
+## Setup dlight WiFi
+
+1. Connect to dlights WiFi AP (GLAMP_)
+2. Open `http://192.168.4.1` with password `33322111`
+3. Configure WiFi details under WiFi Config
+
 ## Installation
 
 1. Copy contents of the repository to custom_components/dlight directory.
