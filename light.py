@@ -9,7 +9,7 @@ from .dlight import get_device_info, get_device_states, turn_on, turn_off, Canno
 
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.components.light import LightEntity, ColorMode, COLOR_MODE_COLOR_TEMP
+from homeassistant.components.light import LightEntity, ColorMode
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -68,7 +68,7 @@ class Dlight(LightEntity):
         self._attr_unique_id = device_id
         self._attr_name = device_id
         self._attr_assumed_state = False
-        self._attr_color_mode = COLOR_MODE_COLOR_TEMP
+        self._attr_color_mode = ColorMode.COLOR_TEMP
         self._attr_supported_color_modes = {ColorMode.COLOR_TEMP}
         self._attr_should_poll = True
         self.swVersion = swVersion
